@@ -20,8 +20,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Testt
+      - name: Login To ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker Image
+        run: docker build -t practice-server .
+
+      - name: Tag Docker Image
         run: |
-          echo "Hello World!"
-          ls
-          pwd
+          echo ${{ steps.login-ecr.outputs.registry }}
+#          docker tag practice-server ${{ steps.login-ecr.outputs.registry }}/
